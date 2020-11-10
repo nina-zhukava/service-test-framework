@@ -16,7 +16,8 @@ import com.playtika.automation.school.test.framework.pojo.responses.Registration
 
 @FeignClient(
         name = "service-feign-client",
-        url = "${test.service.host}"
+//        url = "${test.service.host}"
+        url = "http://taschool-notes-service.herokuapp.com"
 )
 public interface ServiceFeignClient {
 

@@ -3,7 +3,6 @@ package com.playtika.automation.school.test.framework;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.context.ContextConfiguration;
 
 import com.playtika.automation.school.test.framework.action.AuthActions;
 import com.playtika.automation.school.test.framework.configuration.AuthConfiguration;
@@ -14,7 +13,6 @@ import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse
         AuthConfiguration.class,
         ServiceConfiguration.class
 } )
-@ContextConfiguration(classes = {AuthConfiguration.class})
 class ServiceTest {
     @Autowired
     private AuthActions authActions;
