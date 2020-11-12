@@ -1,5 +1,6 @@
 package com.playtika.automation.school.test.framework.configuration;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.cloud.openfeign.EnableFeignClients;
 import org.springframework.context.annotation.Bean;
@@ -23,6 +24,8 @@ public class AuthConfiguration {
         return new AuthActions(authFeignClient, authorization, "password", "read write",
                                "test@email", "password");
     }
+
+
 
 
 }

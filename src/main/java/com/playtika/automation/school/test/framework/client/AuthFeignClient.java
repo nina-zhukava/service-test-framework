@@ -9,7 +9,7 @@ import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse
 
 @FeignClient(
         name = "auth-feign-client",
-//        url = "${test.service.host}"
+//        url = "${test.service.host}" //TODO why it doesn't get url from yml?
         url = "http://taschool-notes-service.herokuapp.com"
 )
 public interface AuthFeignClient {
