@@ -6,9 +6,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
+import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.GetAllUserNotesResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.GetUserNoteResponse;
@@ -22,11 +24,11 @@ import com.playtika.automation.school.test.framework.pojo.responses.Registration
 public interface ServiceFeignClient {
 
 //    register /v1/accounts
-    @PostMapping(value = "/v1/accounts")
-    RegistrationResponse registerUser(@RequestParam("content") CreateNoteRequest content);
+    @PostMapping(value = "/v1/accounts", consumes = "application/json")
+    RegistrationResponse registerUser(@RequestBody RegistrationRequest request);
 
 
-    //get all user notes
+//    get all user notes
     @GetMapping(value = "/v1/notes")
     GetAllUserNotesResponse getAllUserNotesResponse();
 
