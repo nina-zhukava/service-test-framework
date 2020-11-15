@@ -1,6 +1,3 @@
-# Copyrights 2020 Playtika Ltd., all rights reserved to Playtika Ltd.
-# privacy+e17bb14d-edc1-4d26-930d-486fcc1ab8fe@playtika.com
-
 spring:
   profiles: common
   main:
@@ -16,9 +13,3 @@ auth:
     id: test
   grant:
     type: password
-
-#  test.service.host
-#  auth.token
-#  auth.client.id
-#  auth.grant.type
-#  test@email password
