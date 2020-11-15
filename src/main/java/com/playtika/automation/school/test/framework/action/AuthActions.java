@@ -18,7 +18,7 @@ public class AuthActions {
     private final String password;//= "password";
 
     @Step("Authenticate")
-    public AuthResponse getAuthToken() {
+    public AuthResponse getAuthentication() {
         return authFeignClient.authentication(authorization, grant_type, scope, username, password);
     }
 }
