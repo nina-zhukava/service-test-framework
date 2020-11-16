@@ -7,4 +7,7 @@ import lombok.Value;
 @Builder
 public class CreateNoteRequest {
     String content;
+    public CreateNoteRequest(String text){
+        content = text;
+    }
 }

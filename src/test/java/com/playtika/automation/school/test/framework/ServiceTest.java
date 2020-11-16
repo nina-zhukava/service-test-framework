@@ -9,8 +9,10 @@ import com.playtika.automation.school.test.framework.action.AuthActions;
 import com.playtika.automation.school.test.framework.action.ServiceActions;
 import com.playtika.automation.school.test.framework.configuration.AuthConfiguration;
 import com.playtika.automation.school.test.framework.configuration.ServiceConfiguration;
+import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse;
+import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @SpringBootTest(classes = {
@@ -26,15 +28,33 @@ class ServiceTest {
 
     @Test
     void getAuthResponseTest(){
+//        Generate random email and password.
         RegistrationRequest registrationRequest = new RegistrationRequest();
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
+
+//        Register user
         RegistrationResponse registrationResponse = serviceActions.getRegistration(registrationRequest);
 
+//        Authenticate and get token
         AuthResponse authResponse = authActions.getAuthentication(email, password);
+        String authToken = "Bearer " + authResponse.getAccessToken();
 
         System.out.println(authResponse.getAccessToken());
         System.out.println(registrationResponse.getUserId());
+        System.out.println(authToken);
+
+//        create a note with any content
+        CreateNoteRequest createNoteRequest = new CreateNoteRequest("blabla");
+        CreateNoteResponse createFirstNoteResponse = serviceActions.createNote(authToken, createNoteRequest);
+
+        System.out.println(createFirstNoteResponse.getNoteId());
+        System.out.println(createFirstNoteResponse.getContent());
+
+
+
+
+
     }
 
 }
@@ -42,8 +62,8 @@ class ServiceTest {
     Generate random email and password.
     Register user
     Authenticate and get token
+    create a note with any content
 
-        create a note with any content
         Get list of notes and assert it has size equals to one.
         create second note
         Get list of notes and assert it has size has grown.

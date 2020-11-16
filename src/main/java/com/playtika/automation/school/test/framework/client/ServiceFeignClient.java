@@ -7,11 +7,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
-import com.playtika.automation.school.test.framework.pojo.responses.GetAllUserNotesResponse;
+import com.playtika.automation.school.test.framework.pojo.responses.GetUserNotesResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.GetUserNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
@@ -27,12 +28,13 @@ public interface ServiceFeignClient {
     RegistrationResponse registerUser(@RequestBody RegistrationRequest request);
 
 //    add new note
-    @PostMapping(value = "/v1/notes")
-    CreateNoteResponse addNewNote(@RequestBody CreateNoteRequest request);
+    @PostMapping(value = "/v1/notes", consumes = "application/json")
+    CreateNoteResponse addNewNote(@RequestHeader("Authorization") String authorization,
+                                  @RequestBody CreateNoteRequest request);
 
 //    get all user notes
-    @GetMapping(value = "/v1/notes")
-    GetAllUserNotesResponse getAllUserNotesResponse();
+    @GetMapping(value = "/v1/notes", consumes = "application/json")
+    GetUserNotesResponse getUserNotes(@RequestHeader("Authorization") String authorization);
 
 //   get note by id
     @GetMapping(value = "/v1/notes/{noteId}")

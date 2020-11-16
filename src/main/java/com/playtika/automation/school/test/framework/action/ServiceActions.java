@@ -4,7 +4,10 @@ import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 
 import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
+import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
+import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
+import com.playtika.automation.school.test.framework.pojo.responses.GetUserNotesResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @AllArgsConstructor
@@ -16,6 +19,16 @@ public class ServiceActions {
 
         return serviceFeignClient.registerUser(request);
         }
+
+    @Step("Create new note")
+    public CreateNoteResponse createNote(String token, CreateNoteRequest request){
+        return serviceFeignClient.addNewNote(token, /*"request"*/ request);
+    }
+
+    @Step("Get all user notes")
+    public GetUserNotesResponse getUserNotes(String token){
+        return serviceFeignClient.getUserNotes(token);
+    }
 
     }
 

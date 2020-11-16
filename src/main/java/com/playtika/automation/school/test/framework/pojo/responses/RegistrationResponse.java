@@ -19,6 +19,4 @@ public class RegistrationResponse {
 //do I really need it? don't think so
     @JsonProperty("id")
     int userId;
-
-
 }
