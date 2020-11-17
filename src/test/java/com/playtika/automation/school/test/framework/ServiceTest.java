@@ -18,7 +18,6 @@ import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteReq
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
-import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -45,7 +44,7 @@ class ServiceTest {
         String password = registrationRequest.getPassword();
 
 //        Register user
-        RegistrationResponse registrationResponse = serviceActions.getRegistration(registrationRequest);
+        serviceActions.getRegistration(registrationRequest);
 
 //        Authenticate and get token
         AuthResponse authResponse = authActions.getAuthentication(email, password);

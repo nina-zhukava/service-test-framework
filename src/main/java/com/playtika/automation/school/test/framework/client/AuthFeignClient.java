@@ -18,7 +18,7 @@ public interface AuthFeignClient {
 AuthResponse authentication(@RequestHeader("Authorization") String authorization,
                         @RequestParam("grant_type") String grantType,
                         @RequestParam("scope") String scope,
-                        @RequestParam("username") String username,
+                        @RequestParam("username") String userName,
                         @RequestParam("password") String password);
 }
 

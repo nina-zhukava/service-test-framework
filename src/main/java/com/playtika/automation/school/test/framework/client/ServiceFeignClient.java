@@ -16,26 +16,27 @@ import com.playtika.automation.school.test.framework.pojo.responses.Registration
 
 @FeignClient(
         name = "service-feign-client",
-//        url = "${test.service.host}"
-        url = "http://taschool-notes-service.herokuapp.com"
+        url = "${test.service.host}",
+//        url = "http://taschool-notes-service.herokuapp.com",
+        path = "v1"
 )
 public interface ServiceFeignClient {
 
 //    register /v1/accounts
-    @PostMapping(value = "/v1/accounts", consumes = "application/json")
+    @PostMapping(value = "accounts", consumes = "application/json")
     RegistrationResponse registerUser(@RequestBody RegistrationRequest request);
 
 //    add new note
-    @PostMapping(value = "/v1/notes", consumes = "application/json")
+    @PostMapping(value = "notes", consumes = "application/json")
     CreateNoteResponse addNewNote(@RequestHeader("Authorization") String authorization,
                                   @RequestBody CreateNoteRequest request);
 
 //    get all user notes TEST
-    @GetMapping(value = "/v1/notes", consumes = "application/json")
+    @GetMapping(value = "notes", consumes = "application/json")
     String getUserNotes(@RequestHeader("Authorization") String authorization);
 
 //       update note
-    @PutMapping(value = "/v1/notes", consumes = "application/json")
+    @PutMapping(value = "notes", consumes = "application/json")
     void getCreateNote(@PathVariable("noteId") Integer id,
                        @RequestHeader("Authorization") String authorization,
                        @RequestParam("content") String content,

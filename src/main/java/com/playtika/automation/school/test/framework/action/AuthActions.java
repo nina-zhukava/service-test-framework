@@ -10,12 +10,12 @@ import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse
 public class AuthActions {
 
     private final AuthFeignClient authFeignClient;
-    private final String authorization111;
+    private final String authorization;
     private final String grantType;
     private final String scope;
 
     @Step("Authenticate")
     public AuthResponse getAuthentication(String username, String password) {
-        return authFeignClient.authentication(authorization111, grantType, scope, username, password);
+        return authFeignClient.authentication(authorization, grantType, scope, username, password);
     }
 }
