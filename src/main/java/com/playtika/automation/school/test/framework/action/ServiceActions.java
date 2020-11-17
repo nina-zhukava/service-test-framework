@@ -7,7 +7,6 @@ import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
-import com.playtika.automation.school.test.framework.pojo.responses.GetUserNotesResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @AllArgsConstructor
@@ -22,21 +21,20 @@ public class ServiceActions {
 
     @Step("Create new note")
     public CreateNoteResponse createNote(String token, CreateNoteRequest request){
-        return serviceFeignClient.addNewNote(token, /*"request"*/ request);
+        return serviceFeignClient.addNewNote(token, request);
     }
 
-    @Step("Get all user notes")
+/*    @Step("Get all user notes")
     public GetUserNotesResponse getUserNotes(String token){
+        return serviceFeignClient.getUserNotes(token);
+    }*/
+    @Step("Get all user notes")
+    public String getUserNotes(String token){
         return serviceFeignClient.getUserNotes(token);
     }
 
+    @Step("Update note")
+    public void updateNote(String token, int id, String content, int version){
     }
 
-
-/*
-public CreateNoteResponse createNote(Note content){
-        CreateNoteRequest request = CreateNoteRequest
-        .builder()
-        .content(content.toString())
-        .build();
-        return serviceFeignClient.addNewNote(request);*/
+}
