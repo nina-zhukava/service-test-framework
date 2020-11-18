@@ -39,40 +39,47 @@ class ServiceTest {
     @SneakyThrows
     @Test
     void serviceTest(){
-//        Generate random email and password.
         RegistrationRequest registrationRequest = new RegistrationRequest();
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
 
-//        Register user
         serviceActions.getRegistration(registrationRequest);
-
-//        Authenticate and get token
         AuthResponse authResponse = authActions.getAuthentication(email, password);
         String authToken = "Bearer " + authResponse.getAccessToken();
 
-//        create a note with any content
         CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE);
         CreateNoteResponse createFirstNoteResponse = serviceActions.createNote(authToken, createNoteRequest);
+        String userNotes = serviceActions.getUserNotes(authToken); //find a way tp get userNotes here instead of String
 
-        String userNotesResponse = serviceActions.getUserNotes(authToken); //find a way tp get userNotesResponse here instead of String
-
-        ObjectMapper mapper = new ObjectMapper();
+        ObjectMapper mapper = new ObjectMapper();//        TODO костыль, переделать
         List<Note> notes = mapper.reader().forType(new TypeReference<List<Note>>() {
-        }).readValue(userNotesResponse);
-//        TODO костыль, переделать
+        }).readValue(userNotes);
         assertThat(notes.size()).isEqualTo(1);
 
         serviceActions.createNote(authToken, createNoteRequest);
-        String userNotesSecondResponse = serviceActions.getUserNotes(authToken);
         List<Note> notesUpdated = mapper.reader().forType(new TypeReference<List<Note>>() {
-        }).readValue(userNotesSecondResponse);
+        }).readValue(serviceActions.getUserNotes(authToken));
         assertThat(notesUpdated.size()).isEqualTo(2);
-//        Get first note by id and assert it's the same as you've created.
         assertThat(notesUpdated.get(1).getId()).isEqualTo(createFirstNoteResponse.getNoteId());
 
         UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO,notesUpdated.get(1).getVersion());
         serviceActions.updateNote(notesUpdated.get(0).getId(), authToken, updateNoteRequest);
+
+        String userNotesForList = serviceActions.getUserNotes(authToken);
+        List<Note> notesList = mapper.reader().forType(new TypeReference<List<Note>>() {
+        }).readValue(userNotesForList);
+        notesList.forEach(System.out::println);
+
+        //        Get list of notes. Use stream to filter list by id of note and get updated one.
+        Note updatedNote = notesList.stream()
+                                    .filter(note -> note.getId().equals(notesUpdated.get(0).getId()))
+                                    .findFirst().orElse(null);
+
+        //        Check that update note has the same id as first note.
+        assertThat(updatedNote.getId()).isEqualTo(notesUpdated.get(0).getId());
+
+        //        Check that version was incremented.
+        assertThat(serviceActions.getNoteById(notesUpdated.get(0).getId(), authToken).getVersion()).isEqualTo(1);
 
 
     }
@@ -87,8 +94,7 @@ class ServiceTest {
     create second note
     Get list of notes and assert it has size has grown.
     Get first note by id and assert it's the same as you've created.
-
-        Update first note with any new content
+    Update first note with any new content
         Get list of notes. Use stream to filter list by id of note and get updated one.
         Check that update note has the same id as first note. Check that version was incremented. Check that content was update according to text from update step. Check that creation date is equal to first note creation date. Check that modification date is not the same, as in first note.
         Delete first note.

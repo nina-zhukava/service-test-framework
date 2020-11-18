@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 
+import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
@@ -39,15 +40,14 @@ public interface ServiceFeignClient {
     String updateNote(@PathVariable("noteId") int noteId,
                       @RequestHeader("Authorization") String authorization,
                       @RequestBody UpdateNoteRequest request);
-//    TODO do I need smth from response?
 
 
+//       get note by id
+    @GetMapping(value = "notes/{noteId}")
+    Note getNoteById(@PathVariable("noteId") int noteId,
+                     @RequestHeader("Authorization") String authorization);
 
-/*//       get note by id
-    @GetMapping(value = "/v1/notes/{noteId}")
-    GetUserNoteResponse getUserNoteResponse(@PathVariable("noteId") Integer noteId);
-
-
+/*
 //    delete note
     @DeleteMapping(value = "/v1/notes/{noteId}")
     void deleteNote(@PathVariable("noteId") Integer noteId);*/
