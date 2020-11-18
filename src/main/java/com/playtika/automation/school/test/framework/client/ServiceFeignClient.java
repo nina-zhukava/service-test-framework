@@ -7,17 +7,16 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
+import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @FeignClient(
         name = "service-feign-client",
         url = "${test.service.host}",
-//        url = "http://taschool-notes-service.herokuapp.com",
         path = "v1"
 )
 public interface ServiceFeignClient {
@@ -36,12 +35,13 @@ public interface ServiceFeignClient {
     String getUserNotes(@RequestHeader("Authorization") String authorization);
 
 //       update note
-    @PutMapping(value = "notes", consumes = "application/json")
-    void getCreateNote(@PathVariable("noteId") Integer id,
-                       @RequestHeader("Authorization") String authorization,
-                       @RequestParam("content") String content,
-                       @RequestParam("version") String version);
+    @PutMapping(value = "notes/{noteId}", consumes = "application/json")
+    String updateNote(@PathVariable("noteId") int noteId,
+                      @RequestHeader("Authorization") String authorization,
+                      @RequestBody UpdateNoteRequest request);
 //    TODO do I need smth from response?
+
+
 
 /*//       get note by id
     @GetMapping(value = "/v1/notes/{noteId}")

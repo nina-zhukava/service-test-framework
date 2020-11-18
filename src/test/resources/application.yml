@@ -8,3 +8,4 @@ auth:
     id: test
   grant:
     type: password
+  scope: read write

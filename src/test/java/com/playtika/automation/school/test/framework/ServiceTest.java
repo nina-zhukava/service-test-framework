@@ -16,6 +16,7 @@ import com.playtika.automation.school.test.framework.configuration.ServiceConfig
 import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
+import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 
@@ -32,8 +33,8 @@ class ServiceTest {
     @Autowired
     private ServiceActions serviceActions;
 
-    private static final String CONTENT_ONE = "Lorem ipsum dolor sit amet, consectetur elit, sed do eiusmod tempor incididunt ut labore et dolore magna";
-    private static final String CONTENT_TWO = "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.";
+    private static final String CONTENT_ONE = "Lorem ipsum dolor sit amet";
+    private static final String CONTENT_TWO = "Ut enim ad minim veniam";
 
     @SneakyThrows
     @Test
@@ -70,9 +71,9 @@ class ServiceTest {
 //        Get first note by id and assert it's the same as you've created.
         assertThat(notesUpdated.get(1).getId()).isEqualTo(createFirstNoteResponse.getNoteId());
 
-        serviceActions.updateNote(authToken, notesUpdated.get(1).getId(), CONTENT_TWO, notesUpdated.get(1).getVersion());//debug needed - doesn't update
-        String userNotesThirdResponse = serviceActions.getUserNotes(authToken);
-        System.out.println(userNotesThirdResponse);
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO,notesUpdated.get(1).getVersion());
+        serviceActions.updateNote(notesUpdated.get(0).getId(), authToken, updateNoteRequest);
+
 
     }
 

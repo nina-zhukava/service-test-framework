@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
+import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
@@ -34,7 +35,8 @@ public class ServiceActions {
     }
 
     @Step("Update note")
-    public void updateNote(String token, int id, String content, int version){
+    public String updateNote(int noteId, String token, UpdateNoteRequest request) {
+        return serviceFeignClient.updateNote(noteId, token, request);
     }
 
 }
