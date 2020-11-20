@@ -13,12 +13,12 @@ import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse
 )
 public interface AuthFeignClient {
 
-@PostMapping(value = "/oauth/token", consumes = "application/x-www-form-urlencoded")
-AuthResponse authentication(@RequestHeader("Authorization") String authorization,
-                        @RequestParam("grant_type") String grantType,
-                        @RequestParam("scope") String scope,
-                        @RequestParam("username") String userName,
-                        @RequestParam("password") String password);
+    @PostMapping(value = "/oauth/token", consumes = "application/x-www-form-urlencoded")
+    AuthResponse authentication(@RequestHeader("Authorization") String authorization,
+                                @RequestParam("grant_type") String grantType,
+                                @RequestParam("scope") String scope,
+                                @RequestParam("username") String userName,
+                                @RequestParam("password") String password);
 }
 
 

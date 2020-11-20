@@ -1,6 +1,7 @@
 package com.playtika.automation.school.test.framework.client;
 
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,7 +13,6 @@ import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
-import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @FeignClient(
@@ -22,34 +22,33 @@ import com.playtika.automation.school.test.framework.pojo.responses.Registration
 )
 public interface ServiceFeignClient {
 
-//    register /v1/accounts
+    //    register /v1/accounts
     @PostMapping(value = "accounts", consumes = "application/json")
     RegistrationResponse registerUser(@RequestBody RegistrationRequest request);
 
-//    add new note
+    //    add new note
     @PostMapping(value = "notes", consumes = "application/json")
-    CreateNoteResponse addNewNote(@RequestHeader("Authorization") String authorization,
-                                  @RequestBody CreateNoteRequest request);
+    Note addNewNote(@RequestHeader("Authorization") String authorization,
+                    @RequestBody CreateNoteRequest request);
 
-//    get all user notes TEST
+    //    get all user notes TEST
     @GetMapping(value = "notes", consumes = "application/json")
     String getUserNotes(@RequestHeader("Authorization") String authorization);
 
-//       update note
+    //       update note
     @PutMapping(value = "notes/{noteId}", consumes = "application/json")
     String updateNote(@PathVariable("noteId") int noteId,
                       @RequestHeader("Authorization") String authorization,
                       @RequestBody UpdateNoteRequest request);
 
-
-//       get note by id
+    //       get note by id
     @GetMapping(value = "notes/{noteId}")
     Note getNoteById(@PathVariable("noteId") int noteId,
                      @RequestHeader("Authorization") String authorization);
 
-/*
-//    delete note
-    @DeleteMapping(value = "/v1/notes/{noteId}")
-    void deleteNote(@PathVariable("noteId") Integer noteId);*/
+    //    delete note
+    @DeleteMapping(value = "notes/{noteId}")
+    void deleteNoteById(@PathVariable("noteId") int noteId,
+                          @RequestHeader("Authorization") String authorization);
 
 }

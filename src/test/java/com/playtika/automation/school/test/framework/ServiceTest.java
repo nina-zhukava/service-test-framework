@@ -18,14 +18,13 @@ import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteReq
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.responses.AuthResponse;
-import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @SpringBootTest(classes = {
         AuthConfiguration.class,
         ServiceConfiguration.class
-} )
+})
 class ServiceTest {
     @Autowired
     private AuthActions authActions;
@@ -38,7 +37,7 @@ class ServiceTest {
 
     @SneakyThrows
     @Test
-    void serviceTest(){
+    void serviceTest() {
         RegistrationRequest registrationRequest = new RegistrationRequest();
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
@@ -48,38 +47,54 @@ class ServiceTest {
         String authToken = "Bearer " + authResponse.getAccessToken();
 
         CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE);
-        CreateNoteResponse createFirstNoteResponse = serviceActions.createNote(authToken, createNoteRequest);
-        String userNotes = serviceActions.getUserNotes(authToken); //find a way tp get userNotes here instead of String
+        Note firstNote = serviceActions.createNote(authToken, createNoteRequest);
+        System.out.println(firstNote.getId() + " " + firstNote.getContent());
 
+        String notesFirstVersion = serviceActions.getUserNotes(authToken); //find a way tp get notesFirstVersion here instead of String
         ObjectMapper mapper = new ObjectMapper();//        TODO костыль, переделать
-        List<Note> notes = mapper.reader().forType(new TypeReference<List<Note>>() {
-        }).readValue(userNotes);
-        assertThat(notes.size()).isEqualTo(1);
+        List<Note> notesFirstVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
+        }).readValue(notesFirstVersion);
+        assertThat(notesFirstVersionList.size()).isEqualTo(1);
 
         serviceActions.createNote(authToken, createNoteRequest);
-        List<Note> notesUpdated = mapper.reader().forType(new TypeReference<List<Note>>() {
+        List<Note> notesSecondVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(serviceActions.getUserNotes(authToken));
-        assertThat(notesUpdated.size()).isEqualTo(2);
-        assertThat(notesUpdated.get(1).getId()).isEqualTo(createFirstNoteResponse.getNoteId());
+        assertThat(notesSecondVersionList.size()).isEqualTo(2);
+        assertThat(notesSecondVersionList.get(1).getId()).isEqualTo(firstNote.getId());
+        notesSecondVersionList.forEach(System.out::println);
 
-        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO,notesUpdated.get(1).getVersion());
-        serviceActions.updateNote(notesUpdated.get(0).getId(), authToken, updateNoteRequest);
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, notesSecondVersionList.get(1).getVersion());
+        serviceActions.updateNote(notesSecondVersionList.get(1).getId(), authToken, updateNoteRequest); //!!!!!!!!
 
-        String userNotesForList = serviceActions.getUserNotes(authToken);
-        List<Note> notesList = mapper.reader().forType(new TypeReference<List<Note>>() {
-        }).readValue(userNotesForList);
-        notesList.forEach(System.out::println);
+        String notesThirdVersion = serviceActions.getUserNotes(authToken);
+        List<Note> notesThirdVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
+        }).readValue(notesThirdVersion);
+        notesThirdVersionList.forEach(System.out::println);
 
-        //        Get list of notes. Use stream to filter list by id of note and get updated one.
-        Note updatedNote = notesList.stream()
-                                    .filter(note -> note.getId().equals(notesUpdated.get(0).getId()))
-                                    .findFirst().orElse(null);
-
+        //        Get list of notesFirstVersionList. Use stream to filter list by id of note and get updated one.
+        Note updatedNote = notesThirdVersionList.stream()
+                                    .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
+                                    .findFirst().orElse(null); // NPE possible, TODO
+        System.out.println(updatedNote.getId()+ " " + updatedNote.getContent());
         //        Check that update note has the same id as first note.
-        assertThat(updatedNote.getId()).isEqualTo(notesUpdated.get(0).getId());
-
+        assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
         //        Check that version was incremented.
-        assertThat(serviceActions.getNoteById(notesUpdated.get(0).getId(), authToken).getVersion()).isEqualTo(1);
+        assertThat(serviceActions.getNoteById(notesSecondVersionList.get(1).getId(), authToken).getVersion()).isEqualTo(1);
+        //        Check that content was update according to text from update step
+        assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
+        //        Check that creation date is equal to first note creation date. ??
+        assertThat(updatedNote.getCreatedAt()).isEqualTo(notesFirstVersionList.get(0).getCreatedAt());
+        //        Check that modification date is not the same, as in first note. ??
+        assertThat(updatedNote.getModifiedAt()).isNotEqualTo(notesFirstVersionList.get(0).getModifiedAt());
+
+        serviceActions.deleteNoteById(updatedNote.getId(), authToken);
+        String notesForthVersion = serviceActions.getUserNotes(authToken);
+        List<Note> notesForthVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
+        }).readValue(notesForthVersion);
+        notesForthVersionList.forEach(System.out::println);
+//        Get list of notes and assert it has size equal to one and it doesn't contain updated note.!!!
+        assertThat(notesForthVersionList.size()).isEqualTo(1);
+        assertThat(notesForthVersionList.get(0)).isNotEqualTo(updatedNote.getId());
 
 
     }
@@ -95,9 +110,10 @@ class ServiceTest {
     Get list of notes and assert it has size has grown.
     Get first note by id and assert it's the same as you've created.
     Update first note with any new content
-        Get list of notes. Use stream to filter list by id of note and get updated one.
-        Check that update note has the same id as first note. Check that version was incremented. Check that content was update according to text from update step. Check that creation date is equal to first note creation date. Check that modification date is not the same, as in first note.
-        Delete first note.
-        Get list of notes and assert it has size equal to one and it doesn't contain updated note.
+  Get list of notes. Use stream to filter list by id of note and get updated one.
+    Check that update note has the same id as first note. Check that version was incremented. Check that content was update according to text from update
+    step. Check that creation date is equal to first note creation date. Check that modification date is not the same, as in first note.
+    Delete first note.
+    Get list of notes and assert it has size equal to one and it doesn't contain updated note.
         Try to get deleted note and assert that method throws error which contains message: "Note with id [{your note id}] wasn't found"
         delete second note.*/

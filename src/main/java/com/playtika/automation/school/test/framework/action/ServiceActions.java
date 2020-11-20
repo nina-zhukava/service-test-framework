@@ -8,7 +8,6 @@ import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
-import com.playtika.automation.school.test.framework.pojo.responses.CreateNoteResponse;
 import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @AllArgsConstructor
@@ -19,19 +18,19 @@ public class ServiceActions {
     public RegistrationResponse getRegistration(RegistrationRequest request) {
 
         return serviceFeignClient.registerUser(request);
-        }
+    }
 
     @Step("Create new note")
-    public CreateNoteResponse createNote(String token, CreateNoteRequest request){
+    public Note createNote(String token, CreateNoteRequest request) {
         return serviceFeignClient.addNewNote(token, request);
     }
 
-/*    @Step("Get all user notes")
-    public GetUserNotesResponse getUserNotes(String token){
-        return serviceFeignClient.getUserNotes(token);
-    }*/
+    /*    @Step("Get all user notes")
+        public GetUserNotesResponse getUserNotes(String token){
+            return serviceFeignClient.getUserNotes(token);
+        }*/
     @Step("Get all user notes")
-    public String getUserNotes(String token){
+    public String getUserNotes(String token) {
         return serviceFeignClient.getUserNotes(token);
     }
 
@@ -41,8 +40,13 @@ public class ServiceActions {
     }
 
     @Step("Get note by id")
-    public Note getNoteById(int noteId, String token){
+    public Note getNoteById(int noteId, String token) {
         return serviceFeignClient.getNoteById(noteId, token);
+    }
+
+    @Step("delete note")
+    public void deleteNoteById(int noteId, String token) {
+        serviceFeignClient.deleteNoteById(noteId, token);
     }
 
 }
