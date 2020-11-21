@@ -4,6 +4,7 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.FeignException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -73,9 +74,9 @@ class ServiceTest {
 
         //        Get list of notesFirstVersionList. Use stream to filter list by id of note and get updated one.
         Note updatedNote = notesThirdVersionList.stream()
-                                    .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
-                                    .findFirst().orElse(null); // NPE possible, TODO
-        System.out.println(updatedNote.getId()+ " " + updatedNote.getContent());
+                                                .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
+                                                .findFirst().orElse(null); // NPE possible, TODO
+        System.out.println(updatedNote.getId() + " " + updatedNote.getContent());
         //        Check that update note has the same id as first note.
         assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
         //        Check that version was incremented.
@@ -96,6 +97,11 @@ class ServiceTest {
         assertThat(notesForthVersionList.size()).isEqualTo(1);
         assertThat(notesForthVersionList.get(0)).isNotEqualTo(updatedNote.getId());
 
+        try {
+            serviceActions.getNoteById(updatedNote.getId(), authToken);
+        } catch (FeignException f) {
+            assertThat(f.contentUTF8()).contains("Note with id [" + updatedNote.getId() + "] wasn't found");
+        }
 
     }
 
@@ -115,5 +121,5 @@ class ServiceTest {
     step. Check that creation date is equal to first note creation date. Check that modification date is not the same, as in first note.
     Delete first note.
     Get list of notes and assert it has size equal to one and it doesn't contain updated note.
-        Try to get deleted note and assert that method throws error which contains message: "Note with id [{your note id}] wasn't found"
+    Try to get deleted note and assert that method throws error which contains message: "Note with id [{your note id}] wasn't found"
         delete second note.*/

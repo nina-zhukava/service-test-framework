@@ -49,6 +49,6 @@ public interface ServiceFeignClient {
     //    delete note
     @DeleteMapping(value = "notes/{noteId}")
     void deleteNoteById(@PathVariable("noteId") int noteId,
-                          @RequestHeader("Authorization") String authorization);
+                        @RequestHeader("Authorization") String authorization);
 
 }

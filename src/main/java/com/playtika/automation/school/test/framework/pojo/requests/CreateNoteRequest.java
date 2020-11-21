@@ -7,7 +7,8 @@ import lombok.Data;
 @Builder
 public class CreateNoteRequest {
     String content;
-    public CreateNoteRequest(String content){
+
+    public CreateNoteRequest(String content) {
         this.content = content;
     }
 }

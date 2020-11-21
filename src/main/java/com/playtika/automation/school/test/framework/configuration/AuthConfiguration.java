@@ -14,13 +14,15 @@ import com.playtika.automation.school.test.framework.client.AuthFeignClient;
 @EnableFeignClients(clients = AuthFeignClient.class)
 public class AuthConfiguration {
 
-    @Value("${auth.token}") private String authorization;
-    @Value("${auth.grant.type}") private String password;
-    @Value("${auth.scope}") private String scope;
-
+    @Value("${auth.token}")
+    private String authorization;
+    @Value("${auth.grant.type}")
+    private String password;
+    @Value("${auth.scope}")
+    private String scope;
 
     @Bean
-    public AuthActions authActions(AuthFeignClient authFeignClient){
+    public AuthActions authActions(AuthFeignClient authFeignClient) {
         return new AuthActions(authFeignClient, authorization, password, scope);
     }
 

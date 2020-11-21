@@ -14,7 +14,7 @@ import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
 public class ServiceConfiguration {
 
     @Bean
-    public ServiceActions serviceActions(ServiceFeignClient serviceFeignClient){
+    public ServiceActions serviceActions(ServiceFeignClient serviceFeignClient) {
         return new ServiceActions(serviceFeignClient);
     }
 
