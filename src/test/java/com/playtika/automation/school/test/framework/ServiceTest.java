@@ -49,7 +49,6 @@ class ServiceTest {
 
         CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE);
         Note firstNote = serviceActions.createNote(authToken, createNoteRequest);
-        System.out.println(firstNote.getId() + " " + firstNote.getContent());
 
         String notesFirstVersion = serviceActions.getUserNotes(authToken); //find a way tp get notesFirstVersion here instead of String
         ObjectMapper mapper = new ObjectMapper();//        TODO костыль, переделать
@@ -62,7 +61,6 @@ class ServiceTest {
         }).readValue(serviceActions.getUserNotes(authToken));
         assertThat(notesSecondVersionList.size()).isEqualTo(2);
         assertThat(notesSecondVersionList.get(1).getId()).isEqualTo(firstNote.getId());
-        notesSecondVersionList.forEach(System.out::println);
 
         UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, notesSecondVersionList.get(1).getVersion());
         serviceActions.updateNote(notesSecondVersionList.get(1).getId(), authToken, updateNoteRequest); //!!!!!!!!
@@ -70,13 +68,11 @@ class ServiceTest {
         String notesThirdVersion = serviceActions.getUserNotes(authToken);
         List<Note> notesThirdVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesThirdVersion);
-        notesThirdVersionList.forEach(System.out::println);
 
         //        Get list of notesFirstVersionList. Use stream to filter list by id of note and get updated one.
         Note updatedNote = notesThirdVersionList.stream()
                                                 .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
                                                 .findFirst().orElse(null); // NPE possible, TODO
-        System.out.println(updatedNote.getId() + " " + updatedNote.getContent());
         //        Check that update note has the same id as first note.
         assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
         //        Check that version was incremented.
@@ -103,6 +99,8 @@ class ServiceTest {
             assertThat(f.contentUTF8()).contains("Note with id [" + updatedNote.getId() + "] wasn't found");
         }
 
+        serviceActions.deleteNoteById(notesSecondVersionList.get(0).getId(), authToken);
+
     }
 
 }
@@ -122,4 +120,4 @@ class ServiceTest {
     Delete first note.
     Get list of notes and assert it has size equal to one and it doesn't contain updated note.
     Try to get deleted note and assert that method throws error which contains message: "Note with id [{your note id}] wasn't found"
-        delete second note.*/
+    delete second note.*/
