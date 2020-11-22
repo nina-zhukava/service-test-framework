@@ -50,7 +50,7 @@ class ServiceTest {
         CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE);
         Note firstNote = serviceActions.createNote(authToken, createNoteRequest);
 
-        String notesFirstVersion = serviceActions.getUserNotes(authToken); //find a way tp get notesFirstVersion here instead of String
+        String notesFirstVersion = serviceActions.getUserNotes(authToken); //find a way tp get userNotesResponse here instead of String
         ObjectMapper mapper = new ObjectMapper();//        TODO костыль, переделать
         List<Note> notesFirstVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesFirstVersion);

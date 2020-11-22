@@ -7,6 +7,6 @@ import lombok.Value;
 import com.playtika.automation.school.test.framework.pojo.Note;
 
 @Value
-public class GetUserNotesResponse {
+public class UserNotesResponse {
     List<Note> notes;
 }
