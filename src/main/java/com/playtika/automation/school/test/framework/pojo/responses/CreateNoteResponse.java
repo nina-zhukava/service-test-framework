@@ -21,4 +21,3 @@ public class CreateNoteResponse {
     int version;
 
 }
-//{"id":1143,"content":"string","createdAt":"2020-11-15T16:06:40.088","modifiedAt":"2020-11-15T16:06:40.088","version":0}

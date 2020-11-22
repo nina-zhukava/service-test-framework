@@ -13,7 +13,6 @@ import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
-import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @FeignClient(
         name = "service-feign-client",
@@ -24,7 +23,7 @@ public interface ServiceFeignClient {
 
     //    register /v1/accounts
     @PostMapping(value = "accounts", consumes = "application/json")
-    RegistrationResponse registerUser(@RequestBody RegistrationRequest request);
+    void registerUser(@RequestBody RegistrationRequest request);
 
     //    add new note
     @PostMapping(value = "notes", consumes = "application/json")

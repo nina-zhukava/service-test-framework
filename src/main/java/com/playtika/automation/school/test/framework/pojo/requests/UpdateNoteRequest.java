@@ -8,5 +8,4 @@ public class UpdateNoteRequest {
     int version;
 
 }
-//{content: "sdcsdcsdcsdcsdcsdc dscsdcsdc", version: 0}
 

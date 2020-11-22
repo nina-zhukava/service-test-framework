@@ -8,16 +8,14 @@ import com.playtika.automation.school.test.framework.pojo.Note;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
-import com.playtika.automation.school.test.framework.pojo.responses.RegistrationResponse;
 
 @AllArgsConstructor
 public class ServiceActions {
     private final ServiceFeignClient serviceFeignClient;
 
     @Step("Register")
-    public RegistrationResponse getRegistration(RegistrationRequest request) {
-
-        return serviceFeignClient.registerUser(request);
+    public void getRegistration(RegistrationRequest request) {
+        serviceFeignClient.registerUser(request);
     }
 
     @Step("Create new note")
