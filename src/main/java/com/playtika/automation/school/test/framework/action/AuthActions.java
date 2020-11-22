@@ -1,6 +1,5 @@
 package com.playtika.automation.school.test.framework.action;
 
-import io.qameta.allure.Step;
 import lombok.AllArgsConstructor;
 
 import com.playtika.automation.school.test.framework.client.AuthFeignClient;
@@ -14,7 +13,6 @@ public class AuthActions {
     private final String grantType;
     private final String scope;
 
-    @Step("Authenticate")
     public AuthResponse getAuthentication(String username, String password) {
         return authFeignClient.authentication(authorization, grantType, scope, username, password);
     }

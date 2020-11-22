@@ -63,25 +63,19 @@ class ServiceTest {
         assertThat(notesSecondVersionList.get(1).getId()).isEqualTo(firstNote.getId());
 
         UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, notesSecondVersionList.get(1).getVersion());
-        serviceActions.updateNote(notesSecondVersionList.get(1).getId(), authToken, updateNoteRequest); //!!!!!!!!
+        serviceActions.updateNote(notesSecondVersionList.get(1).getId(), authToken, updateNoteRequest);
 
         String notesThirdVersion = serviceActions.getUserNotes(authToken);
         List<Note> notesThirdVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesThirdVersion);
 
-        //        Get list of notesFirstVersionList. Use stream to filter list by id of note and get updated one.
         Note updatedNote = notesThirdVersionList.stream()
                                                 .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
                                                 .findFirst().orElse(null); // NPE possible, TODO
-        //        Check that update note has the same id as first note.
         assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
-        //        Check that version was incremented.
         assertThat(serviceActions.getNoteById(notesSecondVersionList.get(1).getId(), authToken).getVersion()).isEqualTo(1);
-        //        Check that content was update according to text from update step
         assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
-        //        Check that creation date is equal to first note creation date. ??
         assertThat(updatedNote.getCreatedAt()).isEqualTo(notesFirstVersionList.get(0).getCreatedAt());
-        //        Check that modification date is not the same, as in first note. ??
         assertThat(updatedNote.getModifiedAt()).isNotEqualTo(notesFirstVersionList.get(0).getModifiedAt());
 
         serviceActions.deleteNoteById(updatedNote.getId(), authToken);
@@ -89,7 +83,6 @@ class ServiceTest {
         List<Note> notesForthVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesForthVersion);
         notesForthVersionList.forEach(System.out::println);
-//        Get list of notes and assert it has size equal to one and it doesn't contain updated note.!!!
         assertThat(notesForthVersionList.size()).isEqualTo(1);
         assertThat(notesForthVersionList.get(0)).isNotEqualTo(updatedNote.getId());
 
