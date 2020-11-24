@@ -71,7 +71,7 @@ class ServiceTest {
 
         Note updatedNote = notesThirdVersionList.stream()
                                                 .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
-                                                .findFirst().orElse(null); // NPE possible, TODO
+                                                .findFirst().orElseThrow();
         assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
         assertThat(serviceActions.getNoteById(notesSecondVersionList.get(1).getId(), authToken).getVersion()).isEqualTo(1);
         assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
@@ -84,7 +84,7 @@ class ServiceTest {
         }).readValue(notesForthVersion);
         notesForthVersionList.forEach(System.out::println);
         assertThat(notesForthVersionList.size()).isEqualTo(1);
-        assertThat(notesForthVersionList.get(0)).isNotEqualTo(updatedNote.getId());
+        assertThat(notesForthVersionList.get(0).getId()).isNotEqualTo(updatedNote.getId());
 
         try {
             serviceActions.getNoteById(updatedNote.getId(), authToken);
