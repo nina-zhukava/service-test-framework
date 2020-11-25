@@ -56,7 +56,6 @@ class ServiceTest {
         List<Note> notesFirstVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesFirstVersion);
         assertThat(notesFirstVersionList.size()).isEqualTo(1);
-        int FirstNoteId = firstNote.getId();
 
         serviceActions.createNote(authToken, createNoteRequest);
         List<Note> notesSecondVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
@@ -64,23 +63,22 @@ class ServiceTest {
         assertThat(notesSecondVersionList.size()).isEqualTo(2);
         assertThat(notesSecondVersionList.get(1).getId()).isEqualTo(firstNote.getId());
 
-        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, notesSecondVersionList.get(1).getVersion());
-        serviceActions.updateNote(notesSecondVersionList.get(1).getId(), authToken, updateNoteRequest); //notesSecondVersionList.get(1).getId() как отд
-        // переменную вынести
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, firstNote.getVersion());
+        serviceActions.updateNote(firstNote.getId(), authToken, updateNoteRequest);
 
         String notesThirdVersion = serviceActions.getUserNotes(authToken);
         List<Note> notesThirdVersionList = mapper.reader().forType(new TypeReference<List<Note>>() {
         }).readValue(notesThirdVersion);
 
         Note updatedNote = notesThirdVersionList.stream()
-                                                .filter(note -> note.getId().equals(notesSecondVersionList.get(1).getId()))
+                                                .filter(note -> note.getId().equals(firstNote.getId()))
                                                 .findFirst().orElseThrow();// создать отдельный более информ эксепшн можно (другой месседж можно для того же)
         // посмотреть рантайм эксепшены в апитест
-        assertThat(updatedNote.getId()).isEqualTo(notesSecondVersionList.get(1).getId());
-        assertThat(serviceActions.getNoteById(notesSecondVersionList.get(1).getId(), authToken).getVersion()).isEqualTo(1);
+        assertThat(updatedNote.getId()).isEqualTo(firstNote.getId());
+        assertThat(serviceActions.getNoteById(firstNote.getId(), authToken).getVersion()).isEqualTo(1);
         assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
-        assertThat(updatedNote.getCreatedAt()).isEqualTo(notesFirstVersionList.get(0).getCreatedAt());
-        assertThat(updatedNote.getModifiedAt()).isNotEqualTo(notesFirstVersionList.get(0).getModifiedAt()); //80-82 soft assert try
+        assertThat(updatedNote.getCreatedAt()).isEqualTo(firstNote.getCreatedAt());
+        assertThat(updatedNote.getModifiedAt()).isNotEqualTo(firstNote.getModifiedAt()); //80-82 soft assert try
 
         serviceActions.deleteNoteById(updatedNote.getId(), authToken);
         String notesForthVersion = serviceActions.getUserNotes(authToken);
