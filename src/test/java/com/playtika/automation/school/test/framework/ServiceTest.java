@@ -4,7 +4,6 @@ import java.util.List;
 
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import feign.FeignException;
 import lombok.SneakyThrows;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -90,13 +89,6 @@ class ServiceTest {
 
         assertThatThrownBy(() -> serviceActions.getNoteById(updatedNote.getId(), authToken)).hasMessageContaining(
                 "Note with id [" + updatedNote.getId() + "] wasn't found");
-
-        try {
-            serviceActions.getNoteById(updatedNote.getId(), authToken);
-        } catch (FeignException f) {
-            assertThat(f.contentUTF8()).contains("Note with id [" + updatedNote.getId() + "] wasn't found");
-        }
-
         serviceActions.deleteNoteById(notesSecondVersionList.get(0).getId(), authToken);
 
     }
