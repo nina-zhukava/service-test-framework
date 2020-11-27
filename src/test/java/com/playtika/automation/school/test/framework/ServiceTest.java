@@ -5,6 +5,7 @@ import java.util.List;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.SneakyThrows;
+import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,9 +76,11 @@ class ServiceTest {
         // посмотреть рантайм эксепшены в апитест
         assertThat(updatedNote.getId()).isEqualTo(firstNote.getId());
         assertThat(serviceActions.getNoteById(firstNote.getId(), authToken).getVersion()).isEqualTo(1);
-        assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
-        assertThat(updatedNote.getCreatedAt()).isEqualTo(firstNote.getCreatedAt());
-        assertThat(updatedNote.getModifiedAt()).isNotEqualTo(firstNote.getModifiedAt()); //80-82 soft assert try
+        SoftAssertions.assertSoftly(softly -> {
+            softly.assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
+            softly.assertThat(updatedNote.getCreatedAt()).isEqualTo(firstNote.getCreatedAt());
+            softly.assertThat(updatedNote.getModifiedAt()).isNotEqualTo(firstNote.getModifiedAt());
+        });
 
         serviceActions.deleteNoteById(updatedNote.getId(), authToken);
         String notesForthVersion = serviceActions.getUserNotes(authToken);
