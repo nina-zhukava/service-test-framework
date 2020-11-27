@@ -72,8 +72,9 @@ class ServiceTest {
 
         Note updatedNote = notesThirdVersionList.stream()
                                                 .filter(note -> note.getId().equals(firstNote.getId()))
-                                                .findFirst().orElseThrow();// создать отдельный более информ эксепшн можно (другой месседж можно для того же)
-        // посмотреть рантайм эксепшены в апитест
+                                                .findFirst()
+                                                .orElseThrow(() -> new RuntimeException("updated note is not in the list, note id: " + firstNote.getId()));
+
         assertThat(updatedNote.getId()).isEqualTo(firstNote.getId());
         assertThat(serviceActions.getNoteById(firstNote.getId(), authToken).getVersion()).isEqualTo(1);
         SoftAssertions.assertSoftly(softly -> {
