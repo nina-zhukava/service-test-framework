@@ -17,5 +17,4 @@ public class ServiceConfiguration {
     public ServiceActions serviceActions(ServiceFeignClient serviceFeignClient) {
         return new ServiceActions(serviceFeignClient);
     }
-
 }

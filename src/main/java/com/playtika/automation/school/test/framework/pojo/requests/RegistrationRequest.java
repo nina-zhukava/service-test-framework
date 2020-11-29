@@ -9,5 +9,4 @@ public class RegistrationRequest {
 
     public String email = Utils.emailGenerator();
     public String password = Utils.passwordGenerator();
-
 }

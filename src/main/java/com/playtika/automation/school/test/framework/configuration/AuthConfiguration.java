@@ -25,5 +25,4 @@ public class AuthConfiguration {
     public AuthActions authActions(AuthFeignClient authFeignClient) {
         return new AuthActions(authFeignClient, authorization, password, scope);
     }
-
 }

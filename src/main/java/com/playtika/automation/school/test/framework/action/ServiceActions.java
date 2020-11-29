@@ -1,5 +1,7 @@
 package com.playtika.automation.school.test.framework.action;
 
+import java.util.List;
+
 import lombok.AllArgsConstructor;
 
 import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
@@ -20,7 +22,7 @@ public class ServiceActions {
         return serviceFeignClient.addNewNote(token, request);
     }
 
-    public String getUserNotes(String token) {
+    public List<Note> getUserNotes(String token) {
         return serviceFeignClient.getUserNotes(token);
     }
 
@@ -35,5 +37,4 @@ public class ServiceActions {
     public void deleteNoteById(int noteId, String token) {
         serviceFeignClient.deleteNoteById(noteId, token);
     }
-
 }

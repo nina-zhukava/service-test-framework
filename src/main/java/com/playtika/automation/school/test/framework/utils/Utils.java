@@ -12,5 +12,4 @@ public class Utils {
     public static String passwordGenerator() {
         return RandomStringUtils.randomAlphabetic(6);
     }
-
 }

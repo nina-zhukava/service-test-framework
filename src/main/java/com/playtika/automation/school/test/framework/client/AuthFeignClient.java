@@ -20,5 +20,3 @@ public interface AuthFeignClient {
                                 @RequestParam("username") String userName,
                                 @RequestParam("password") String password);
 }
-
-

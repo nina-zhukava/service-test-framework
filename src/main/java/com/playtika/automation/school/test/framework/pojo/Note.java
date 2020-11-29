@@ -13,5 +13,3 @@ public class Note {
     String modifiedAt;
     Integer version;
 }
-//[{"id":1147,"content":"еуцгн","createdAt":"2020-11-16T08:20:55.497","modifiedAt":"2020-11-16T08:20:55.497","version":0},
-// {"id":1148,"content":"еуцгн","createdAt":"2020-11-16T08:20:55.497","modifiedAt":"2020-11-16T08:20:55.497","version":0}]
