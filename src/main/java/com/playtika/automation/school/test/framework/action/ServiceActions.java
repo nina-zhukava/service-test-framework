@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 
 import com.playtika.automation.school.test.framework.client.ServiceFeignClient;
 import com.playtika.automation.school.test.framework.pojo.Note;
+import com.playtika.automation.school.test.framework.pojo.User;
 import com.playtika.automation.school.test.framework.pojo.requests.CreateNoteRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.RegistrationRequest;
 import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteRequest;
@@ -14,11 +15,15 @@ import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteReq
 public class ServiceActions {
     private final ServiceFeignClient serviceFeignClient;
 
-    public void getRegistration(RegistrationRequest request) {
-        serviceFeignClient.registerUser(request);
+    public User getRegistration() {
+        RegistrationRequest registrationRequest = new RegistrationRequest();
+        User user = new User(registrationRequest.getEmail(), registrationRequest.getPassword());
+        serviceFeignClient.registerUser(registrationRequest);
+        return user;
     }
 
-    public Note createNote(String token, CreateNoteRequest request) {
+    public Note createNote(String token, String content) {
+        CreateNoteRequest request = new CreateNoteRequest(content);
         return serviceFeignClient.addNewNote(token, request);
     }
 
@@ -26,15 +31,16 @@ public class ServiceActions {
         return serviceFeignClient.getUserNotes(token);
     }
 
-    public void updateNote(int noteId, String token, UpdateNoteRequest request) { // TODO привести к одному виду, токен первы например
-        serviceFeignClient.updateNote(noteId, token, request);
+    public void updateNote(String token, int noteId, String content, int version) {
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(content, version);
+        serviceFeignClient.updateNote(token, noteId, updateNoteRequest);
     }
 
-    public Note getNoteById(int noteId, String token) {
-        return serviceFeignClient.getNoteById(noteId, token);
+    public Note getNoteById(String token, int noteId) {
+        return serviceFeignClient.getNoteById(token, noteId);
     }
 
-    public void deleteNote(int noteId, String token) {
-        serviceFeignClient.deleteNoteById(noteId, token);
+    public void deleteNote(String token, int noteId) {
+        serviceFeignClient.deleteNoteById(token, noteId);
     }
 }

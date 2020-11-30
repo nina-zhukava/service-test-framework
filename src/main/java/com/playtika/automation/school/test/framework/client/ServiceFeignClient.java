@@ -34,15 +34,15 @@ public interface ServiceFeignClient {
     List<Note> getUserNotes(@RequestHeader("Authorization") String authorization);
 
     @PutMapping(value = "notes/{noteId}")
-    String updateNote(@PathVariable("noteId") int noteId,
-                      @RequestHeader("Authorization") String authorization,
+    String updateNote(@RequestHeader("Authorization") String authorization,
+                      @PathVariable("noteId") int noteId,
                       @RequestBody UpdateNoteRequest request);
 
     @GetMapping(value = "notes/{noteId}")
-    Note getNoteById(@PathVariable("noteId") int noteId,
-                     @RequestHeader("Authorization") String authorization);
+    Note getNoteById(@RequestHeader("Authorization") String authorization,
+                     @PathVariable("noteId") int noteId);
 
     @DeleteMapping(value = "notes/{noteId}")
-    void deleteNoteById(@PathVariable("noteId") int noteId,
-                        @RequestHeader("Authorization") String authorization);
+    void deleteNoteById(@RequestHeader("Authorization") String authorization,
+                        @PathVariable("noteId") int noteId);
 }
