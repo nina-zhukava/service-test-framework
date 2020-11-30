@@ -11,5 +11,5 @@ import com.playtika.automation.school.test.framework.pojo.Note;
 @Setter
 public class UserNotesResponse {
 
-    List<Note> notes;
+    List<Note> notes; //TODO delete
 }

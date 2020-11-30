@@ -26,7 +26,7 @@ public class ServiceActions {
         return serviceFeignClient.getUserNotes(token);
     }
 
-    public void updateNote(int noteId, String token, UpdateNoteRequest request) {
+    public void updateNote(int noteId, String token, UpdateNoteRequest request) { // TODO привести к одному виду, токен первы например
         serviceFeignClient.updateNote(noteId, token, request);
     }
 
@@ -34,7 +34,7 @@ public class ServiceActions {
         return serviceFeignClient.getNoteById(noteId, token);
     }
 
-    public void deleteNoteById(int noteId, String token) {
+    public void deleteNote(int noteId, String token) {
         serviceFeignClient.deleteNoteById(noteId, token);
     }
 }

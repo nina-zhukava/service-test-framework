@@ -23,7 +23,7 @@ import com.playtika.automation.school.test.framework.pojo.requests.UpdateNoteReq
 )
 public interface ServiceFeignClient {
 
-    @PostMapping(value = "accounts", consumes = "application/json")
+    @PostMapping(value = "accounts", consumes = "application/json") //TODO del appl/json everywhere
     void registerUser(@RequestBody RegistrationRequest request);
 
     @PostMapping(value = "notes", consumes = "application/json")
@@ -38,7 +38,7 @@ public interface ServiceFeignClient {
                       @RequestHeader("Authorization") String authorization,
                       @RequestBody UpdateNoteRequest request);
 
-    @GetMapping(value = "notes/{noteId}")
+    @GetMapping(value = "notes/{noteId}") //check if I need value  =""
     Note getNoteById(@PathVariable("noteId") int noteId,
                      @RequestHeader("Authorization") String authorization);
 

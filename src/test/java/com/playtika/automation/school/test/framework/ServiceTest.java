@@ -2,7 +2,6 @@ package com.playtika.automation.school.test.framework;
 
 import java.util.List;
 
-import lombok.SneakyThrows;
 import org.assertj.core.api.SoftAssertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,43 +25,45 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
         ServiceConfiguration.class
 })
 class ServiceTest {
+
+    private static final String CONTENT_ONE = "Lorem ipsum dolor sit amet";
+    private static final String CONTENT_TWO = "Ut enim ad minim veniam";
+
     @Autowired
     private AuthActions authActions;
 
     @Autowired
     private ServiceActions serviceActions;
+    //TODO jupiter before each method registr and token save
 
-    private static final String CONTENT_ONE = "Lorem ipsum dolor sit amet";
-    private static final String CONTENT_TWO = "Ut enim ad minim veniam";
-
-    @SneakyThrows
     @Test
     void serviceTest() {
-        RegistrationRequest registrationRequest = new RegistrationRequest();
+        RegistrationRequest registrationRequest = new RegistrationRequest(); // вынести как гет регистрейшн из теста
         String email = registrationRequest.getEmail();
         String password = registrationRequest.getPassword();
         serviceActions.getRegistration(registrationRequest);
         AuthResponse authResponse = authActions.getAuthentication(email, password);
-        String authToken = "Bearer " + authResponse.getAccessToken();
+        String authToken = authResponse.getTokenType() + authResponse.getAccessToken();
 
-        CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE);
+        CreateNoteRequest createNoteRequest = new CreateNoteRequest(CONTENT_ONE); // take away, use createNote
         Note firstNote = serviceActions.createNote(authToken, createNoteRequest);
 
         List<Note> notesFirstVersion = serviceActions.getUserNotes(authToken);
-        assertThat(notesFirstVersion.size()).isEqualTo(1);
+        assertThat(notesFirstVersion).hasSize(1);
 
         serviceActions.createNote(authToken, createNoteRequest);
         List<Note> notesSecondVersion = serviceActions.getUserNotes(authToken);
-        assertThat(notesSecondVersion.size()).isEqualTo(2);
+        assertThat(notesSecondVersion).hasSize(2);
         assertThat(notesSecondVersion.get(1).getId()).isEqualTo(firstNote.getId());
+        assertThat(firstNote).isEqualTo(serviceActions.getNoteById(firstNote.getId(), authToken));
 
-        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, firstNote.getVersion());
+        UpdateNoteRequest updateNoteRequest = new UpdateNoteRequest(CONTENT_TWO, firstNote.getVersion()); // update note method - take away
         serviceActions.updateNote(firstNote.getId(), authToken, updateNoteRequest);
 
         List<Note> notesThirdVersion = serviceActions.getUserNotes(authToken);
 
         Note updatedNote = notesThirdVersion.stream()
-                                            .filter(note -> note.getId().equals(firstNote.getId()))
+                                            .filter(note -> firstNote.getId().equals(note.getId()))
                                             .findFirst()
                                             .orElseThrow(() -> new RuntimeException("Updated note is not in the list, note id: " + firstNote.getId()));
         assertThat(updatedNote.getId()).isEqualTo(firstNote.getId());
@@ -71,15 +72,17 @@ class ServiceTest {
             softly.assertThat(updatedNote.getContent()).isEqualTo(CONTENT_TWO);
             softly.assertThat(updatedNote.getCreatedAt()).isEqualTo(firstNote.getCreatedAt());
             softly.assertThat(updatedNote.getModifiedAt()).isNotEqualTo(firstNote.getModifiedAt());
+            softly.assertThat(updatedNote.getVersion()).isEqualTo(firstNote.getVersion() + 1);
         });
 
-        serviceActions.deleteNoteById(updatedNote.getId(), authToken);
+        serviceActions.deleteNote(updatedNote.getId(), authToken);
         List<Note> notesForthVersion = serviceActions.getUserNotes(authToken);
-        assertThat(notesForthVersion.size()).isEqualTo(1);
-        assertThat(notesForthVersion.get(0).getId()).isNotEqualTo(updatedNote.getId());
+        assertThat(notesForthVersion).hasSize(1);
+        assertThat(notesForthVersion).doesNotContain(updatedNote);
 
         assertThatThrownBy(() -> serviceActions.getNoteById(updatedNote.getId(), authToken)).hasMessageContaining(
                 "Note with id [" + updatedNote.getId() + "] wasn't found");
-        serviceActions.deleteNoteById(notesSecondVersion.get(0).getId(), authToken);
+        serviceActions.deleteNote(notesSecondVersion.get(0).getId(), authToken);
     }
+    //TODO after each delete last note here
 }
